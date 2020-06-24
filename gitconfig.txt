@@ -1,0 +1,35 @@
+
+[url "git@git.code.oa.com:"]
+    insteadOf = http://git.code.oa.com/
+
+[url "git@git.code.oa.com:"]
+    insteadOf = https://git.code.oa.com/
+
+[url "git@git.code.oa.com:"]   
+    insteadOf = git://git.code.oa.com/
+
+[credential]
+	helper = store
+[user]
+	email = leehomwu@tencent.com
+	name = leehomwu
+[pull]
+	rebase = true
+[alias]
+    d = difftool
+	lg = log --color --graph --date-order --date=format:'%Y-%m-%d %H:%M:%S' --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset' --abbrev-commit --name-only --all
+	st = status  
+	br = branch -vv
+	cm = commit -am
+	cloner = clone --recursive
+    #从远程更新子模块
+	us = submodule update --init --recursive --remote
+    #看commit
+	rv = log --format=%h -1
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+#trustExitCode = true
+[log]
+	date = iso
