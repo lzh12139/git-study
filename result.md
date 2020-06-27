@@ -33,16 +33,14 @@ git config --global https.proxy https://127.0.0.1:1080
 
 1. 创建仓库  
     - 通过 `init` 初始化仓库  
-        通过 `git init` ，在本地初始化仓库。  
-        然后，与远程库相关联
         ```
-        git remote set-url origin <url>
+        git init                        初始化本地仓库
+        git remote set-url origin <url> 与远程库相关联
         ```
 
     - 通过 `clone` 初始化仓库  
-        将地址为 `url` 的库，放在 `dir` 目录下。
         ``` 
-        git clone <url> [dir]
+        git clone <url> [dir] 将地址为 url 的库，放在 dir 目录下。
         ```
 
 2. 暂存文件
@@ -65,8 +63,20 @@ git config --global https.proxy https://127.0.0.1:1080
     
     可以使用 `-u` 选项指定默认主机，这样以后就可以不加任何参数地使用 `git push` 了。
 
-5. pull
-6. fetch
+5. pull  
+    将远程仓库的最新更改合并到当前分支中，相当于 `fetch+merge`
+    ```
+    git pull [主机名] [分支名]
+    ```
+    不推荐这样做，建议 `fetch+merge`
+
+6. fetch  
+    用于取回远程仓库所有分支的最新快照，并保存在版本库中。
+    ```
+    git fetch [主机名]  创建并更新所有远程分支的本地远程分支，FETCH_HEAD是字典序最小的那个分支？
+    git fetch <远程主机名> <分支名> 仅拉取对应的分支，FETCH_HEAD等于这个分支
+    ```
+    拉取之后，可以用 `origin/<分支名>` 来代表最新的分支。
 
 7. status  
     显示工作目录和暂存区的状态。  
@@ -122,7 +132,7 @@ git config --global https.proxy https://127.0.0.1:1080
 
     注意，只有在使用 SSH协议 时，才会通过 SSH公钥 来认证。
 
-    ***注意：不确定是否在公司电脑上可行，未尝试过，只确定在github上可行***
+    ***注意：不确定是否在公司电脑上可行，未尝试过，只确定在github上可行***  
 
     - [ ] 上 8000 确定
 
@@ -142,6 +152,7 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
     git config --global alias.unstage 'reset HEAD --'
                               ^^^^^^^  ^^^^^^^^^^^^^
+                              别名     原名
     ```
     这会使下面的两个命令等价：
     ```
@@ -153,13 +164,13 @@ git config --global https.proxy https://127.0.0.1:1080
 
 https://www.yiibai.com/git/git_merge.html
 
-## cherry pick 和 rebase
+## cherry-pick 和 rebase
 
 rebase https://mp.weixin.qq.com/s/Y-imESQiYRCZXJd_mkkoZw
 
 ## 版本回滚
 1. 版本  
-    记**本地**的当前版本为 `HEAD`   
+    记**本地的版本库**的当前版本为 `HEAD`   
     前一个版本为 `HEAD^` ，前两个版本为 `HEAD^^` ，  
     前100个版本为 `HEAD~100`  
     在执行 `reset` , `pull` , `merge` 操作之后，会把操作前的 `HEAD` 放入 `ORIG_HEAD` 中，以防回滚操作
@@ -185,14 +196,18 @@ rebase https://mp.weixin.qq.com/s/Y-imESQiYRCZXJd_mkkoZw
     常用方法： 刚刚 commit 错了，执行
     ```
     git reset --soft HEAD^
+    因为刚刚的commit错了，而HEAD指向最新的commit
+    所以要回退到HEAD的前一个版本，也就是HEAD^
     ```
     更改的文件会保留在暂存区中
 
 5. 撤销某个commit
     ```
-    git revert -n <SHA>
+    git revert <SHA | HEAD~n>    撤销后自动commit，不建议
+    git revert -n <SHA | HEAD ~n> 加上选项-n(或--no-commit)，不会自动commit而是停留在工作区
     ```
-    相当于做一次所选择的 commit 的逆操作，即如果原 commit 是插入，那么这次就是删除。
+    相当于做一次所选择的 commit 的逆操作，  
+    即如果原 commit 是插入，那么这次就是删除。
 
 6. 在污染的工作区中回滚合并或者拉取  
     git reset --merge
