@@ -434,13 +434,31 @@ git config --global https.proxy https://127.0.0.1:1080
     子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。   
     它能让你将另一个仓库克隆到自己的项目中，同时还保持提交的独立。
 
-2. 命令
+2. 添加子模块  
+    增加一个子模块，可指定分支，并将子模块放在设置的路径里。  
+    如果不指定路径，则默认放在与项目名同名的文件夹中。
     ```
-    git submodule status -- 当前仓库的子模块的状态，如果子模块的最开始（hash值前）有一个减号，则表明这个子模块
-    git submodule add <url> [-b branch] [path] -- 增加一个子模块，可指定分支，并将子模块放在传入的路径里。
-    git submodule init -- 初始化本地的配置文件
-    git submodule update
+    git submodule add <url> [-b branch] [path]
     ```
 
-    当clone一个拥有子模块的仓库时，默认会包含该子模块目录，但其中没有任何文件。
-    可以通过执行 init+update
+3. 克隆包含子模块的项目及其初始化
+    如果不带任何参数的克隆，那么子模块会是一个空的文件夹。  
+    想要子模块也被正确的初始化，那么请带上 `--recurse-submodules` 选项
+    ```
+    git clone --recurse-submodules <url>
+    ```
+
+    如果忘了带上这个参数，那么执行下面的这个命令也能正确的初始化
+    ```
+    git submodule update --init --recursive
+    ```
+
+4. 更新子模块
+    ```
+    git submodule update --remote
+    ```
+    ```
+    git submodule status -- 当前仓库的子模块的状态，如果子模块的最开始（hash值前）有一个减号，则表明这个子模块
+
+    git submodule init -- 初始化本地的配置文件
+    ```
