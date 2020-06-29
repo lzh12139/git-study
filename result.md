@@ -1,5 +1,6 @@
 # git常用操作
 
+
 ## 开始
 
 设置提交时显示的用户名，邮箱：
@@ -9,13 +10,21 @@ git config --global user.email "xxx@xxx.com"
 ```
 网络配置：
 ```
-git config --global https.proxy http://127.0.0.1:1080
-git config --global https.proxy https://127.0.0.1:1080
+git config --global http.https://git.code.oa.com.proxy http://127.0.0.1:12639
+git config --global http.http://git.code.oa.com.proxy http://127.0.0.1:12639
 ```
+如果要取消这个设置，那么：
+```
+git config --global --unset http.https://git.code.oa.com.proxy
+git config --global --unset http.http://git.code.oa.com.proxy
+```
+
 本文中所有 `<>` 括起来的内容为必选项， `[]` 括起来的内容为可选项。  
 `SHA` 指 commit 的 hash 值。
 
+
 ## 一些概念
+
 1. 工作区  
    在电脑里能看到的目录，供人们操作文件的地方。
 
@@ -28,6 +37,7 @@ git config --global https.proxy https://127.0.0.1:1080
 他们之间的关系和操作可以看下图：
 
 ![avatar](/image/git-file-change.jpg)
+
 
 ## 基础操作
 
@@ -43,7 +53,7 @@ git config --global https.proxy https://127.0.0.1:1080
         git clone <url> [dir] 将地址为 url 的库，放在 dir 目录下。
         ```
 
-2. 为下次 commit 添加文件
+2. 为下次 `commit` 添加文件
    ```
    git add <file>
    ```
@@ -60,7 +70,8 @@ git config --global https.proxy https://127.0.0.1:1080
     git commit -a 
     ```
 
-    更改最后一次提交的message
+    更改最后一次提交的message  
+    **注意，请不要修改已经推送过的提交记录**
     ```
     git commit --amend -m "<message>"
     ```
@@ -71,19 +82,25 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
     将本地分支的更新，推送到远程主机。
     
-    可以使用 `-u` 选项指定上游分支，这样以后就可以不加任何参数地使用 `git push` 了。
+    可以使用 `-u` 选项指定上游分支，这样以后就可以不加任何参数地使用 `git push` 了。  
+    如果不指定远程分支，则默认将本地的该分支推送到远程的相同名字的分支上。  
+    如果远程仓库不存在该分支，则该分支会被自动创建
 
 5. pull  
     将远程仓库的最新更改合并到当前分支中，相当于 `fetch + merge`
     ```
     git pull [主机名] [分支名]
     ```
-    不推荐这样做，建议 `fetch + merge`
+    不推荐这样做，建议 `fetch + merge` ，
+    或者使用
+    ```
+    git pull --rebase [主机名] [分支名]
+    ```
 
 6. fetch  
     用于取回远程仓库所有分支的最新快照，并保存在版本库中。
 
-    创建并更新所有远程分支的本地远程分支，FETCH_HEAD是字典序最小的那个分支？（存疑，但还未找到对应的说明）
+    创建并更新所有远程分支的本地远程分支，`FETCH_HEAD` 是字典序最小的那个分支？（存疑，但还未找到对应的说明）
     ```
     git fetch [主机名]  
     ```
@@ -94,7 +111,7 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
     来拉取所有远程仓库的所有分支
     
-    仅拉取对应的分支，FETCH_HEAD等于这个分支
+    仅拉取对应的分支，`FETCH_HEAD` 等于这个分支
     ```
     git fetch <远程主机名> <分支名> 
     ```
@@ -179,11 +196,11 @@ git config --global https.proxy https://127.0.0.1:1080
 
 12. rm 
     ```
-    git rm <file> 同时删除磁盘上和暂存区上的文件
-    git rm --cached <file>仅删除暂存区上的文件
+    git rm <file>               同时删除磁盘上和暂存区上的文件
+    git rm --cached <file>      仅删除暂存区上的文件
     ```  
-    将文件从已跟踪文件清单中移除需要使用上面的命令，而不是直接在文件目录中删除该文件。这样会删除git仓库中和磁盘上的该文件。  
-    注意，如果要将该文件从git仓库中删除的话，不能只删除本地文件
+    将文件从已跟踪文件清单中移除需要使用上面的命令，而不是直接在文件目录中删除该文件。这样会删除 `git` 仓库中和磁盘上的该文件。  
+    注意，如果要将该文件从 `git` 仓库中删除的话，不能只是删除本地文件
 
 13. remote
     查看配置的远程仓库服务器
@@ -197,10 +214,11 @@ git config --global https.proxy https://127.0.0.1:1080
     git remote set-url <主机名> <url>   更改某个远程仓库服务器的url
     ``` 
     查看配置的远程仓库服务器。  
-    以git开头的使用SSH公钥认证
+    以 `git` 开头的使用 `SSH` 公钥认证  
+    以 `https` 开头的使用 `HTTPS` 认证，需要输入密码
 
 14. 密钥  
-    可以使用 SSH公钥 来进行认证，将公钥传到 github 上后push操作就不需要输入用户名和密码。  
+    可以使用 SSH公钥 来进行认证，将公钥传到 github 上后 `push` 操作就不需要输入用户名和密码。  
 
     注意，只有在使用 SSH协议 时，才会通过 SSH公钥 来认证。  
     如果不是使用 SSH协议 ，那么请看第13点来更改。
@@ -226,7 +244,8 @@ git config --global https.proxy https://127.0.0.1:1080
 
 
 ## 合并
-1. cherry-pick
+
+1. cherry-pick  
     用于合并某个提交到当前分支  
     首先需要查看想要合并的提交的 hash 值，并切换到被合并的分支  
     然后执行
@@ -235,12 +254,12 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
     有冲突就解决冲突，解决完 `git add` 就可以了
 
-    如果想要取消 cherry-pick，执行：
+    如果想要取消 `cherry-pick` ，执行：
     ```
     git cherry-pick --abort
     ```
 
-2. merge
+2. merge  
     用于合并某个分支到当前分支
     ```
     git merge --no-ff <分支名>
@@ -252,12 +271,12 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
     查看冲突的文件名，并解决冲突，不要忘记添加他们
 
-
     为了避免污染主分支的commit信息，推荐使用 `--no-ff` 选项  
     可以使用 `--no-commit` 选项避免自动进行提交
 
 
 ## 版本回滚
+
 1. HEAD  
     记指向**本地的当前分支的当前版本**的指针为 `HEAD`   
     前一个版本为 `HEAD^` ，前两个版本为 `HEAD^^` ，  
@@ -279,46 +298,46 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
     git reset --soft <SHA | HEAD~n>
     ```
-    撤销 commit ，但是不会撤销文件的更改。  
+    撤销 `commit` ，但是不会撤销文件的更改。  
     可以用来保存当前分支的修改，然后切换到另一分支。  
 
-    常用方法： 刚刚 commit 错了，执行
+    常用方法： 刚刚 `commit` 错了，执行
     ```
     git reset --soft HEAD^
-    因为刚刚的commit错了，而HEAD指向最新的commit
-    所以要回退到HEAD的前一个版本，也就是HEAD^
     ```
+    因为刚刚的commit错了，而HEAD指向最新的commit  
+    所以要回退到HEAD的前一个版本，也就是HEAD^  
     更改的文件会保留在暂存区中
 
-5. 撤销某个commit
+5. 撤销某个commit  
+    撤销后会自动commit，不建议。
     ```
-    git revert <SHA | HEAD~n>    撤销后自动commit，不建议
-    git revert -n <SHA | HEAD ~n> 加上选项-n(或--no-commit)，不会自动commit而是停留在工作区
+    git revert <SHA | HEAD~n>
     ```
-    相当于做一次所选择的 commit 的逆操作，  
-    即如果原 commit 是插入，那么这次就是删除。
 
-6. 在污染的工作区中回滚合并或者拉取  
-    git reset --merge  
-    没看懂  
-    https://www.yiibai.com/git/git_reset.html
-    - [ ] 看懂
+    可以用过加上选项 `-n` ，使得该次操作不会自动提交，改动会保留在暂存中。
+    ```
+    git revert -n <SHA | HEAD ~n>
+    ```
 
-7. 放弃某个文件本地修改  
-    放弃某一文件的本地修改。
+    这个操作相当于做一次所选择的 `commit` 的逆操作，  
+    即如果原 `commit` 是插入，那么这次就是删除。
+
+6. 放弃某个文件本地修改  
+    放弃某一文件的本地修改。  
     先从尝试从暂存区恢复，找不到再从版本库恢复  
     回退到该文件最近一次 `add` 或 `commit`  
     ```
     git checkout -- <file>
     ```
 
-8. 回退某个文件
+7. 回退某个文件  
     将某个文件回退到指定版本
     ```
     git checkout <SHA | HEAD~n> <file>
     ```
 
-9. 提交历史  
+8. 提交历史  
     ```
     git log     查看所有提交过的版本信息
     git reflog  查看所有操作记录，包括被回滚过的操作
@@ -343,7 +362,7 @@ git config --global https.proxy https://127.0.0.1:1080
     ```
 
     新建并切换分支，  
-    如果指定了源分支名就在源分支的基础上建立新分支；
+    如果指定了源分支名就在源分支的基础上建立新分支；  
     否则在当前分支的基础上建立新分支
     ```
     git checkout -b <分支名> [<源分支名>]   
@@ -392,7 +411,7 @@ git config --global https.proxy https://127.0.0.1:1080
 
     ![avatar](/image/rebase-2.png)
 
-2. 合并commit
+2. 合并commit  
     要合并最近几次的commit，使用：
     ```
     git rebase -i HEAD~n
@@ -418,11 +437,11 @@ git config --global https.proxy https://127.0.0.1:1080
     # d, drop = remove commit
     ```
     需要更改的是前面几行的第一个单词  
-    pick 表示使用该 commit  
-    squash 表示使用该 commit ，把这个 commit 压缩到前面标记为的 pick 的 commit 中（也就是说，commit 的数量减少1）
+    `pick` 表示使用该 `commit`  
+    `squash` 表示使用该 `commit` ，把这个 `commit` 压缩到前面标记为的 `pick` 的 `commit` 中（也就是说，`commit` 的数量减少1）
 
-    如果要将所有 commit 压缩成一个，可以保留第一个 commit 的 pick ，将其他所有 commit 改成s(或squash)  
-    保存后，会弹出用于编写commit的编辑器，更改 commit 并保存后，就完成了 commit 的压缩
+    如果要将所有 `commit` 压缩成一个，可以保留第一个 `commit` 的 `pick` ，将其他所有 `commit` 改成 `s` (或 `squash` )  
+    保存后，会弹出用于编写 `commit` 的编辑器，更改 `commit` 并保存后，就完成了 `commit` 的压缩
 
 3. 可以看看这个，讲的很不错  
     https://mp.weixin.qq.com/s/Y-imESQiYRCZXJd_mkkoZw
@@ -431,7 +450,7 @@ git config --global https.proxy https://127.0.0.1:1080
 ## 子模块
 
 1. 定义  
-    子模块允许你将一个 Git 仓库作为另一个 Git 仓库的子目录。   
+    子模块允许你将一个 `Git` 仓库作为另一个 `Git` 仓库的子目录。   
     它能让你将另一个仓库克隆到自己的项目中，同时还保持提交的独立。
 
 2. 添加子模块  
@@ -441,7 +460,7 @@ git config --global https.proxy https://127.0.0.1:1080
     git submodule add <url> [-b branch] [path]
     ```
 
-3. 克隆包含子模块的项目及其初始化
+3. 克隆包含子模块的项目及其初始化  
     如果不带任何参数的克隆，那么子模块会是一个空的文件夹。  
     想要子模块也被正确的初始化，那么请带上 `--recurse-submodules` 选项
     ```
@@ -453,12 +472,23 @@ git config --global https.proxy https://127.0.0.1:1080
     git submodule update --init --recursive
     ```
 
-4. 更新子模块
+4. 更新子模块  
+    更新每个子模块：
     ```
-    git submodule update --remote
+    git submodule update --remote --merge
+    git submodule update --remote --rebase
     ```
-    ```
-    git submodule status -- 当前仓库的子模块的状态，如果子模块的最开始（hash值前）有一个减号，则表明这个子模块
+    不同的选项采用的是不同的合并方法
 
-    git submodule init -- 初始化本地的配置文件
+5. 删除子模块  
+    首先，删除 `.gitmodules` 和 `.git/config` 文件中有关该子模块的内容。  
+    随后暂存 `.gitmodules` 的更改：
     ```
+    git add .gitmodules
+    ```
+    从git仓库中删除子模块：
+    ```
+    git rm --cached <submodule-name>
+    rm .git/modules/<submodule-name>
+    ```
+    最后提交这次修改，就完成了。
